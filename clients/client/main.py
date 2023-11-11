@@ -1,7 +1,7 @@
 import asyncio
 from clients.async_requester import Requester
 
-URLS = ['/cpu', '/load']
+URLS = ['/core', '/load']
 
 requester = Requester(port='8000')
 

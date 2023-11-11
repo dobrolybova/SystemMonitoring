@@ -2,8 +2,8 @@ import asyncio
 from clients.async_requester import RequesterOneSession
 
 
-monitoring_requester = RequesterOneSession(port='8080')
-requester = RequesterOneSession(port='8000')
+monitoring_requester = RequesterOneSession(port='8000')
+requester = RequesterOneSession(port='8080')
 
 
 # TODO: metrics with answer time

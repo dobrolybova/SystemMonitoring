@@ -1,9 +1,14 @@
+from http import HTTPStatus
+
 import loguru
-from aiohttp.web import View, json_response
+from aiohttp.web import View
+
+from servers.utils import response_wrapper
 
 
 # TODO: logging to middleware
 class HealthCheck(View):
-    async def get(self):
+    @response_wrapper(payload=False)
+    async def get(self) -> int:
         loguru.logger.info(f"HealthCheck return status OK")
-        return json_response({'status': 'ok'})
+        return HTTPStatus.OK

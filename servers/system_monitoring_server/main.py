@@ -8,11 +8,12 @@ from servers.system_monitoring_server.views import CpuView, LoadView, HealthChec
 def add_routes(application: Application):
     loguru.logger.info(f"Monitoring, add routers")
     application.router.add_view("/health", HealthCheck)
-    application.router.add_view("/cpu", CpuView)
+    application.router.add_view("/core", CpuView)
     application.router.add_view("/load", LoadView)
 
 
 app = web.Application()
+# TODO: put in docker
 # TODO: increase number of workers
 if __name__ == "__main__":
     add_routes(app)
