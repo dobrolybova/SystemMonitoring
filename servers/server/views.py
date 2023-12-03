@@ -6,7 +6,6 @@ from aiohttp.web import View
 from servers.utils import response_wrapper
 
 
-# TODO: logging to middleware
 class HealthCheck(View):
     @response_wrapper(payload=False)
     async def get(self) -> int:

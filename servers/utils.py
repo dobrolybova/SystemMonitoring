@@ -1,5 +1,7 @@
 from functools import wraps
+from json import JSONDecodeError
 
+from aiohttp import web
 from aiohttp.web_response import json_response
 
 
@@ -21,3 +23,10 @@ def response_wrapper(payload: bool):
     if payload:
         return payload_wrapper
     return wrapper
+
+
+async def get_body_from_request(request: web.Request) -> dict | str:
+    try:
+        return await request.json()
+    except JSONDecodeError:
+        return await request.text()

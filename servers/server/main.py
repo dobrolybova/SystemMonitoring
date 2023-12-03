@@ -2,9 +2,10 @@ import loguru
 from aiohttp import web
 from aiohttp.web_app import Application
 
+from servers.middlewares import middleware_logger
 from servers.server.views import HealthCheck
 
-app = web.Application()
+app = web.Application(middlewares=[middleware_logger])
 
 
 def add_routers(application: Application):

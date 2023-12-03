@@ -1,15 +1,14 @@
 import asyncio
 import time
+from http import HTTPStatus
 
 import loguru
-import psutil
 from aiohttp.web import View
 
 from api_schema import CpuAverageCoreResponse, CpuAverageLoadResponse, CpuAverageLoadModel
 from servers.system_monitoring_server.ps_utils import get_cpu_load_average, get_cpu_percent, CpuAverageLoad, \
     CpuAverageCoreLoad
 from servers.utils import response_wrapper
-from http import HTTPStatus
 
 
 class HealthCheck(View):
