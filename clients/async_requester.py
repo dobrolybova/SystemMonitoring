@@ -11,7 +11,6 @@ from aiohttp import (
 
 from clients.config import CLIENT_TIMEOUT, SLEEP, SCHEME, HOST
 # TODO: count RPS
-# TODO: make sync and async requester
 from clients.utils import handle_request
 
 

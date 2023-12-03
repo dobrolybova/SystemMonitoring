@@ -1,4 +1,3 @@
-from json import JSONDecodeError
 from typing import Callable
 
 import loguru
