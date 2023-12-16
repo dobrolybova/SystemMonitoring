@@ -1,33 +1,44 @@
-from dataclasses import dataclass
+import time
+from logging import getLogger, basicConfig
 
-import loguru
-
-from clients.config import SCHEME, HOST
 import requests
+from requests import Response as Resp
 
+from clients.config import SLEEP
+from clients.models import Response
 
-# TODO: move to utils
-@dataclass
-class Response:
-    body: dict
-    status: int
-
-# TODO: check request and exceptions, move to decorator
+logger = getLogger(__name__)
+basicConfig(filename="", filemode='w', level="INFO")
 
 
 class Request:
-    def __init__(self, scheme=SCHEME, host=HOST, port='8080'):
-        self.base_url = scheme + "://" + host + ":" + port
 
-    def request(self, method="GET", url="", **kwargs):
+    @staticmethod
+    def get_body(response: Resp) -> dict | str:
         try:
-            response = requests.request(method=method, url=url)
-            try:
-                body = response.json()
-            except Exception as ex:
-                body = response.text()
-            response.raise_for_status()
-            return Response(body, response.status_code)
+            return response.json()
+        except requests.exceptions.JSONDecodeError:
+            return response.text
+
+    def inf_request(self, method="GET", url="", **kwargs) -> None:
+        try:
+            while True:
+                self.send_request(method=method, url=url, kwargs=kwargs)
+                time.sleep(SLEEP)
+        except Exception as e:
+            logger.error(f"Exception is raised {e.__repr__()}")
+
+    def send_request(self, method="GET", url="", **kwargs) -> Response:
+        try:
+            return self.request(method=method, url=url, kwargs=kwargs)
         except (requests.exceptions.HTTPError, requests.exceptions.TooManyRedirects, requests.ConnectionError,
                 requests.Timeout) as e:
-            loguru.logger.info(f"Client response error url:{url} exception:{e.__repr__()} error:{e}")
+            logger.info(f"Client response error url:{url} exception:{e.__repr__()} error:{e}")
+
+    def request(self, method="GET", url="", **kwargs) -> Response:
+        response = requests.request(method=method, url=url)
+        body = self.get_body(response)
+        status = response.status_code
+        logger.info(f"Send sync request method: {method}, url: {url}, received body: {body} status: {status}")
+        response.raise_for_status()
+        return Response(body, status)

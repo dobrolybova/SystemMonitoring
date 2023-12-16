@@ -1,5 +1,4 @@
 import asyncio
-from dataclasses import dataclass
 
 import loguru
 from aiohttp import (
@@ -10,16 +9,11 @@ from aiohttp import (
 )
 
 from clients.config import CLIENT_TIMEOUT, SLEEP, SCHEME, HOST
-# TODO: count RPS
+from clients.models import Response
 from clients.utils import handle_request
 
 
-@dataclass
-class Response:
-    body: dict
-    status: int
-
-
+# TODO: count RPS
 class Requester:
     def __init__(self, scheme=SCHEME, host=HOST, port='8080'):
         self.base_url = scheme + "://" + host + ":" + port

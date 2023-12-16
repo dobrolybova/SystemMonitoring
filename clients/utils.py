@@ -24,3 +24,13 @@ def handle_request(request_func):
         except (asyncio.exceptions.TimeoutError, ClientConnectorError, ClientResponseError) as e:
             loguru.logger.info(f"Client response error url:{url} exception:{e.__repr__()} error:{e}")
     return func
+
+
+def handle_key_interrupt(main_func):
+    @wraps(main_func)
+    def func(*args, **kwargs):
+        try:
+            main_func(*args, **kwargs)
+        except KeyboardInterrupt:
+            pass
+    return func

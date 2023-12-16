@@ -1,9 +1,12 @@
 import asyncio
 from clients.async_requester import Requester
+from clients.sync_requester import Request as SyncRequester
+from clients.utils import handle_key_interrupt
 
 URLS = ['/core', '/load']
 
 requester = Requester(port='8000')
+sync_requester = SyncRequester()
 
 
 async def tasks():
@@ -11,5 +14,21 @@ async def tasks():
     await asyncio.gather(*t_list)
 
 
-if __name__ == "__main__":
+@handle_key_interrupt
+def async_main():
     asyncio.run(tasks())
+
+
+@handle_key_interrupt
+def sync_main():
+    while True:
+        sync_requester.send_request(url='http://localhost:8000/core')
+        sync_requester.send_request(url='http://localhost:8000/load')
+
+
+if __name__ == "__main__":
+    # async_main()
+    sync_main()
+
+
+
