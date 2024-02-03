@@ -1,6 +1,6 @@
 import asyncio
-from clients.async_requester import Requester
-from clients.sync_requester import Request as SyncRequester
+from clients.requesters.async_requester import Requester
+from clients.requesters.sync_requester import Request as SyncRequester
 from clients.utils import handle_key_interrupt
 
 URLS = ['/core', '/load']

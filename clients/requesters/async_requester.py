@@ -10,14 +10,15 @@ from aiohttp import (
 
 from clients.config import CLIENT_TIMEOUT, SLEEP, SCHEME, HOST
 from clients.models import Response
+from clients.rps.rps_counter import RPS
 from clients.utils import handle_request
 
 
-# TODO: count RPS
 class Requester:
     def __init__(self, scheme=SCHEME, host=HOST, port='8080'):
         self.base_url = scheme + "://" + host + ":" + port
         self.session = None
+        self.rps_counter = RPS()
 
     def get_new_session(self) -> ClientSession:
         timeout = ClientTimeout(total=CLIENT_TIMEOUT)
@@ -26,6 +27,10 @@ class Requester:
             raise_for_status=True,
             base_url=self.base_url,
         )
+
+    def rps_handle(self):
+        self.rps_counter.increase()
+        self.rps_counter.show()
 
     @staticmethod
     async def get_body(response: ClientResponse) -> dict | str:
@@ -39,6 +44,7 @@ class Requester:
         async with self.get_new_session() as session:
             async with session.request(method, url, **kwargs) as response:
                 body = await self.get_body(response)
+                self.rps_handle()
                 return Response(body, response.status)
 
     async def inf_request(self, name="", method='GET', url=''):
@@ -64,4 +70,5 @@ class RequesterOneSession(Requester):
     async def request(self, name='', method="GET", url="", **kwargs) -> Response | None:
         async with self.get_session().request(method, url, **kwargs) as response:
             body = await self.get_body(response)
+            self.rps_handle()
             return Response(body, response.status)

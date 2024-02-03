@@ -1,5 +1,5 @@
 import asyncio
-from clients.async_requester import RequesterOneSession
+from clients.requesters.async_requester import RequesterOneSession
 
 
 monitoring_requester = RequesterOneSession(port='8000')

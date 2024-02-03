@@ -6,12 +6,19 @@ from requests import Response as Resp
 
 from clients.config import SLEEP
 from clients.models import Response
+from clients.rps.rps_counter import RPS
 
 logger = getLogger(__name__)
 basicConfig(filename="", filemode='w', level="INFO")
 
 
 class Request:
+    def __init__(self):
+        self.rps_counter = RPS()
+
+    def rps_handle(self):
+        self.rps_counter.increase()
+        self.rps_counter.show()
 
     @staticmethod
     def get_body(response: Resp) -> dict | str:
@@ -39,6 +46,7 @@ class Request:
         response = requests.request(method=method, url=url)
         body = self.get_body(response)
         status = response.status_code
+        self.rps_handle()
         logger.info(f"Send sync request method: {method}, url: {url}, received body: {body} status: {status}")
         response.raise_for_status()
         return Response(body, status)
