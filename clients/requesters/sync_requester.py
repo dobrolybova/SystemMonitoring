@@ -13,12 +13,12 @@ basicConfig(filename="", filemode='w', level="INFO")
 
 
 class Request:
-    def __init__(self):
-        self.rps_counter = RPS()
+    def __init__(self, rps_storage_file):
+        self.rps_counter = RPS(rps_storage_file)
 
     def rps_handle(self):
         self.rps_counter.increase()
-        self.rps_counter.show()
+        self.rps_counter.count_last_period()
 
     @staticmethod
     def get_body(response: Resp) -> dict | str:

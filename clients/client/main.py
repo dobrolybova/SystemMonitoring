@@ -5,8 +5,8 @@ from clients.utils import handle_key_interrupt
 
 URLS = ['/core', '/load']
 
-requester = Requester(port='8000')
-sync_requester = SyncRequester()
+requester = Requester(rps_storage_file='async_rps_for_cpu.csv', port='8000')
+sync_requester = SyncRequester(rps_storage_file='sync_rps_for_cpu.csv')
 
 
 async def tasks():
