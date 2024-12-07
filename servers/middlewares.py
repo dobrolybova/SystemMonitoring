@@ -1,6 +1,6 @@
 from typing import Callable
 
-import loguru
+import loguru     # pylint: disable=E0401
 from aiohttp import web
 
 from servers.utils import get_body_from_request

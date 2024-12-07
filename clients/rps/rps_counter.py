@@ -1,4 +1,3 @@
-import http
 from logging import getLogger, basicConfig
 from time import monotonic
 
@@ -10,20 +9,20 @@ basicConfig(filename="", filemode='w', level="INFO")
 
 class RPS:
     def __init__(self, file):
-        self.st = monotonic()
+        self.timestamp = monotonic()
         self.req_n = 0
         self.file = file
 
     def _store(self, rps: float) -> None:
         try:
-            with open(self.file, 'a+') as file:
+            with open(self.file, 'a+', encoding='utf8') as file:
                 file.write(str(rps) + '\n')
                 logger.info(f"Store rps:{rps} to file: {self.file}")
         except FileNotFoundError:
             logger.error(f"Wrong file name to store rps: {self.file}")
 
     def _reset_count(self):
-        self.st = monotonic()
+        self.timestamp = monotonic()
         self.req_n = 0
 
     def _count_rps(self, period: float) -> float:
@@ -33,7 +32,7 @@ class RPS:
         return rps
 
     def count_last_period(self) -> None:
-        period = monotonic() - self.st
+        period = monotonic() - self.timestamp
         if period > RPS_COUNT_PERIOD:
             rps = self._count_rps(period)
             self._store(rps)

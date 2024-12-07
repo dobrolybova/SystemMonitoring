@@ -2,19 +2,23 @@ import asyncio
 import time
 from http import HTTPStatus
 
-import loguru
+import loguru             # pylint: disable=E0401
 from aiohttp.web import View
 
 from api_schema import CpuAverageCoreResponse, CpuAverageLoadResponse, CpuAverageLoadModel
-from servers.system_monitoring_server.ps_utils import get_cpu_load_average, get_cpu_percent, CpuAverageLoad, \
-    CpuAverageCoreLoad
+from servers.system_monitoring_server.ps_utils import (
+    get_cpu_load_average,
+    get_cpu_percent,
+    CpuAverageLoad,
+    CpuAverageCoreLoad,
+)
 from servers.utils import response_wrapper
 
 
 class HealthCheck(View):
     @response_wrapper(payload=False)
     async def get(self) -> int:
-        loguru.logger.info(f"Monitoring heathcheck return status OK")
+        loguru.logger.info("Monitoring heathcheck return status OK")
         return HTTPStatus.OK
 
 
@@ -37,6 +41,6 @@ class LoadView(View):
     async def get(self) -> (CpuAverageLoadResponse, int):
         cpu_load: CpuAverageLoad = get_cpu_load_average()
         time.sleep(2)
-        loguru.logger.info(f"return load value {cpu_load.last_1_min} {cpu_load.last_5_min} {cpu_load.last_15_min}")
+        loguru.logger.info(f"return load value "
+                           f"{cpu_load.last_1_min} {cpu_load.last_5_min} {cpu_load.last_15_min}")
         return CpuAverageLoadResponse(cpu=CpuAverageLoadModel.from_dto(cpu_load)), HTTPStatus.OK
-

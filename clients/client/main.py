@@ -29,6 +29,3 @@ def sync_main():
 if __name__ == "__main__":
     # async_main()
     sync_main()
-
-
-

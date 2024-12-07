@@ -1,6 +1,6 @@
 import asyncio
 
-import loguru
+import loguru     # pylint: disable=E0401
 from aiohttp import (
     ContentTypeError,
     ClientTimeout,
@@ -52,8 +52,8 @@ class Requester:
             while True:
                 await self.request(name=name, method=method, url=url)
                 await asyncio.sleep(SLEEP)
-        except Exception as e:
-            loguru.logger.error(f"Exception is raised from {name} {e.__repr__()}")
+        except Exception as exc:  # pylint: disable=W0703
+            loguru.logger.error(f"Exception is raised from {name} {exc.__repr__()}")
 
 
 class RequesterOneSession(Requester):

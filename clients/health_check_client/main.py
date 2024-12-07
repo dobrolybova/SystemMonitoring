@@ -8,9 +8,11 @@ requester = RequesterOneSession(rps_storage_file='', port='8080')
 
 # TODO: metrics with answer time
 async def tasks():
-    t1 = asyncio.create_task(monitoring_requester.inf_request(name="ping_monitoring_server", method='GET', url='/health'))
-    t2 = asyncio.create_task(requester.inf_request(name="ping_server", method='GET', url='/health'))
-    await asyncio.gather(t1, t2)
+    task1 = asyncio.create_task(monitoring_requester.inf_request(
+        name="ping_monitoring_server", method='GET', url='/health'))
+    task2 = asyncio.create_task(requester.inf_request(
+        name="ping_server", method='GET', url='/health'))
+    await asyncio.gather(task1, task2)
 
 
 if __name__ == "__main__":

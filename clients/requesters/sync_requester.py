@@ -32,21 +32,24 @@ class Request:
             while True:
                 self.send_request(method=method, url=url, kwargs=kwargs)
                 time.sleep(SLEEP)
-        except Exception as e:
-            logger.error(f"Exception is raised {e.__repr__()}")
+        except Exception as exc:   # pylint: disable=W0703
+            logger.error(f"Exception is raised {exc.__repr__()}")
 
     def send_request(self, method="GET", url="", **kwargs) -> Response:
         try:
             return self.request(method=method, url=url, kwargs=kwargs)
-        except (requests.exceptions.HTTPError, requests.exceptions.TooManyRedirects, requests.ConnectionError,
-                requests.Timeout) as e:
-            logger.info(f"Client response error url:{url} exception:{e.__repr__()} error:{e}")
+        except (requests.exceptions.HTTPError,
+                requests.exceptions.TooManyRedirects,
+                requests.ConnectionError,
+                requests.Timeout) as exc:
+            logger.info(f"Client response error url:{url} exception:{exc.__repr__()} error:{exc}")
 
     def request(self, method="GET", url="", **kwargs) -> Response:
         response = requests.request(method=method, url=url)
         body = self.get_body(response)
         status = response.status_code
         self.rps_handle()
-        logger.info(f"Send sync request method: {method}, url: {url}, received body: {body} status: {status}")
+        logger.info(f"Send sync request method: {method}, url: {url}, "
+                    f"received body: {body} status: {status}")
         response.raise_for_status()
         return Response(body, status)

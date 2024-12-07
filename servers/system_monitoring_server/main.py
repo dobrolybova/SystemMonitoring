@@ -1,4 +1,4 @@
-import loguru
+import loguru     # pylint: disable=E0401
 from aiohttp import web
 from aiohttp.web_app import Application
 
@@ -7,7 +7,7 @@ from servers.system_monitoring_server.views import CpuView, LoadView, HealthChec
 
 
 def add_routes(application: Application):
-    loguru.logger.info(f"Monitoring, add routers")
+    loguru.logger.info("Monitoring, add routers")
     application.router.add_view("/health", HealthCheck)
     application.router.add_view("/core", CpuView)
     application.router.add_view("/load", LoadView)

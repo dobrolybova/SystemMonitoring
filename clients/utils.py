@@ -1,7 +1,7 @@
 import asyncio
 from functools import wraps
 
-import loguru
+import loguru  # pylint: disable=E0401
 from aiohttp import ClientConnectorError, ClientResponseError
 
 
@@ -21,8 +21,9 @@ def handle_request(request_func):
                                f"body: {response_obj.body} "
                                f"status: {response_obj.status}")
             return response_obj
-        except (asyncio.exceptions.TimeoutError, ClientConnectorError, ClientResponseError) as e:
-            loguru.logger.info(f"Client response error url:{url} exception:{e.__repr__()} error:{e}")
+        except (asyncio.exceptions.TimeoutError, ClientConnectorError, ClientResponseError) as exc:
+            loguru.logger.info(f"Client response error url:{url} "
+                               f"exception:{exc.__repr__()} error:{exc}")
     return func
 
 
